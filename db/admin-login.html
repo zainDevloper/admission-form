@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darulfalah · Admin Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef3f9;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .login-card {
+            max-width: 480px;
+            width: 100%;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px -25px #1e3b5c;
+            padding: 2.8rem 2.5rem;
+            border: 1px solid #dfe9f2;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 2.2rem;
+        }
+
+        .logo-frame {
+            display: inline-block;
+            background: white;
+            padding: 10px 30px 10px 30px;
+            border-radius: 100px;
+            box-shadow: 0 12px 24px -16px #1d3a5c;
+            border: 1px solid #dde5f0;
+            margin-bottom: 1.2rem;
+        }
+
+        .logo {
+            width: 90px;
+            height: auto;
+            display: block;
+            border-radius: 30px;
+        }
+
+        .logo-area h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #173e5c;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-area p {
+            color: #5c7188;
+            font-size: 1rem;
+            margin-top: 0.4rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #264e73;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            margin-left: 0.8rem;
+        }
+
+        .input-group input {
+            padding: 1.2rem 1.8rem;
+            border: 2px solid #e2ebf5;
+            border-radius: 60px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #0f2d44;
+            outline: none;
+            transition: 0.2s;
+            background: #f8fafd;
+        }
+
+        .input-group input:focus {
+            border-color: #89a9cc;
+            background: white;
+        }
+
+        .login-btn {
+            background: #1d3b58;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.25s;
+            margin-top: 0.8rem;
+            border: 1px solid #ffffff40;
+        }
+
+        .login-btn:hover {
+            background: #234f73;
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px -14px #102b40;
+        }
+
+        .login-btn:active {
+            transform: translateY(2px);
+        }
+
+        .error-message {
+            background: #fff5f5;
+            color: #b14250;
+            border-left: 6px solid #cd5b6b;
+            padding: 1rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .demo-hint {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed #d8e4f0;
+            text-align: center;
+            color: #7f95b0;
+            font-size: 0.9rem;
+        }
+
+        .demo-hint span {
+            background: #ecf5ff;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            color: #1d3b58;
+            font-weight: 500;
+            margin: 0 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo-area">
+            <div class="logo-frame">
+                <img src="logo.jpg" alt="Darulfalah" class="logo" onerror="this.innerHTML='<span style=font-size:2rem;font-weight:600;color:#1d3b58;>D</span>'">
+            </div>
+            <h2>Admin Portal</h2>
+            <p>Masjid Darulfalah · Admissions</p>
+        </div>
+
+        <div class="login-form">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter username" value="admin">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password" value="darulfalah123">
+            </div>
+            
+            <button class="login-btn" id="loginBtn">Sign in to dashboard</button>
+            
+            <div id="loginMessage"></div>
+            
+            <div class="demo-hint">
+                <span>demo</span> admin / darulfalah123
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginBtn = document.getElementById('loginBtn');
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const loginMessage = document.getElementById('loginMessage');
+
+        // Simple admin credentials (in real app, this would be server-side)
+        const ADMIN_USER = 'admin';
+        const ADMIN_PASS = 'darulfalah123';
+
+        loginBtn.addEventListener('click', () => {
+            const user = username.value.trim();
+            const pass = password.value.trim();
+
+            if (user === ADMIN_USER && pass === ADMIN_PASS) {
+                // Set login flag
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                // Redirect to admin panel
+                window.location.href = 'admin-panel.html';
+            } else {
+                loginMessage.innerHTML = '<div class="error-message">✗ Invalid username or password</div>';
+            }
+        });
+
+        // Allow Enter key
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loginBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

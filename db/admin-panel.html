@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darulfalah · Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef3f9;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+        }
+
+        /* main container */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header with logo */
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            box-shadow: 0 15px 30px -20px #1e3b5c;
+            border: 1px solid #dfe9f2;
+            margin-bottom: 2.5rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo-small {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 8px 16px -10px #1d3a5c;
+            border: 1px solid #dde5f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1d3b58;
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #173e5c;
+        }
+
+        .header-left h1 span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #7f95b0;
+            margin-left: 0.8rem;
+        }
+
+        .logout-btn {
+            background: white;
+            border: 2px solid #d8e4f0;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #1d3b58;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .logout-btn:hover {
+            background: #f5f9ff;
+            border-color: #9bb0cc;
+        }
+
+        /* stats cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px -12px #1d3a5c;
+            border: 1px solid #dfe9f2;
+        }
+
+        .stat-card h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #7f95b0;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1d3b58;
+            line-height: 1;
+        }
+
+        /* student list section */
+        .students-section {
+            background: white;
+            border-radius: 40px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px -20px #1e3b5c;
+            border: 1px solid #dfe9f2;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #173e5c;
+        }
+
+        .search-box {
+            background: #f8fafd;
+            border: 2px solid #e2ebf5;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            min-width: 280px;
+        }
+
+        .search-box span {
+            color: #7f95b0;
+            font-size: 1.2rem;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+        }
+
+        /* students table */
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .students-table th {
+            text-align: left;
+            padding: 1rem 1rem;
+            color: #5c7188;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            border-bottom: 2px solid #e2ebf5;
+        }
+
+        .students-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid #eaf1f9;
+            color: #1d3b58;
+            font-weight: 500;
+        }
+
+        .students-table tr {
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .students-table tr:hover {
+            background: #f5f9ff;
+        }
+
+        .student-row.selected {
+            background: #ecf5ff;
+            border-radius: 20px;
+        }
+
+        .date-badge {
+            background: #ecf5ff;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #1d3b58;
+            display: inline-block;
+        }
+
+        .time-badge {
+            color: #7f95b0;
+            font-size: 0.9rem;
+        }
+
+        /* student detail panel */
+        .detail-panel {
+            background: white;
+            border-radius: 40px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px -20px #1e3b5c;
+            border: 1px solid #dfe9f2;
+            margin-top: 2rem;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .detail-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #173e5c;
+        }
+
+        .back-btn {
+            background: white;
+            border: 2px solid #d8e4f0;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #1d3b58;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: #f5f9ff;
+            border-color: #9bb0cc;
+        }
+
+        /* student detail grid */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            background: #f8fafd;
+            border-radius: 30px;
+            padding: 1.5rem;
+            border: 1px solid #e2ebf5;
+            transition: 0.2s;
+        }
+
+        .detail-item:hover {
+            border-color: #89a9cc;
+            background: white;
+        }
+
+        .detail-item .label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #5c7188;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-item .value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1d3b58;
+            word-break: break-word;
+        }
+
+        .detail-item .value.small {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .id-badge {
+            background: #1d3b58;
+            color: white;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-left: 1rem;
+        }
+
+        /* loading state */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #7f95b0;
+        }
+
+        /* no data */
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: #7f95b0;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 700px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                border-radius: 40px;
+            }
+            .students-table th, .students-table td {
+                padding: 0.8rem 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- header with logo -->
+        <div class="dashboard-header">
+            <div class="header-left">
+                <div class="logo-small">
+                    <img src="logo.jpg" alt="D" style="width: 100%; height: 100%; object-fit: cover; border-radius: 30px;" onerror="this.style.display='none'; this.parentElement.innerHTML='D'">
+                </div>
+                <h1>Admin Dashboard <span>Masjid Darulfalah</span></h1>
+            </div>
+            <button class="logout-btn" id="logoutBtn">← Logout</button>
+        </div>
+
+        <!-- stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <h3>Total Students</h3>
+                <div class="number" id="totalStudents">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Today's Registrations</h3>
+                <div class="number" id="todayCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>This Week</h3>
+                <div class="number" id="weekCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Last Updated</h3>
+                <div class="number" id="lastUpdated" style="font-size: 1.2rem;">—</div>
+            </div>
+        </div>
+
+        <!-- students list section -->
+        <div class="students-section">
+            <div class="section-header">
+                <h2>Registered Students</h2>
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search by name, father, course...">
+                </div>
+            </div>
+
+            <div id="studentsListContainer">
+                <!-- dynamic content will be loaded here -->
+                <div class="loading">Loading students...</div>
+            </div>
+        </div>
+
+        <!-- student detail panel (hidden by default) -->
+        <div id="detailPanel" style="display: none;"></div>
+    </div>
+
+    <script type="module">
+        import { supabase } from './supabase-config.js';
+
+        // Check authentication
+        if (!sessionStorage.getItem('adminLoggedIn')) {
+            window.location.href = 'admin-login.html';
+        }
+
+        // DOM elements
+        const studentsContainer = document.getElementById('studentsListContainer');
+        const detailPanel = document.getElementById('detailPanel');
+        const totalStudentsEl = document.getElementById('totalStudents');
+        const todayCountEl = document.getElementById('todayCount');
+        const weekCountEl = document.getElementById('weekCount');
+        const lastUpdatedEl = document.getElementById('lastUpdated');
+        const searchInput = document.getElementById('searchInput');
+
+        let allStudents = [];
+        let selectedStudentId = null;
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('adminLoggedIn');
+            window.location.href = 'admin-login.html';
+        });
+
+        // Format date
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-PK', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        // Format time
+        function formatTime(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleTimeString('en-PK', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Load students from database
+        async function loadStudents() {
+            try {
+                const { data, error } = await supabase
+                    .from('admission')
+                    .select('*')
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+
+                allStudents = data || [];
+                
+                // Update stats
+                updateStats();
+                
+                // Render list
+                renderStudentsList(allStudents);
+                
+            } catch (error) {
+                console.error('Error loading students:', error);
+                studentsContainer.innerHTML = '<div class="no-data">Failed to load students</div>';
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            totalStudentsEl.textContent = allStudents.length;
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            
+            const todayStudents = allStudents.filter(s => {
+                const created = new Date(s.created_at || s.id * 1000); // fallback
+                return created >= today;
+            });
+            
+            const weekStudents = allStudents.filter(s => {
+                const created = new Date(s.created_at || s.id * 1000);
+                return created >= weekAgo;
+            });
+            
+            todayCountEl.textContent = todayStudents.length;
+            weekCountEl.textContent = weekStudents.length;
+            lastUpdatedEl.textContent = new Date().toLocaleTimeString();
+        }
+
+        // Render students list
+        function renderStudentsList(students) {
+            if (students.length === 0) {
+                studentsContainer.innerHTML = '<div class="no-data">No students found</div>';
+                return;
+            }
+
+            let html = `
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student Name</th>
+                            <th>Father Name</th>
+                            <th>Course</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            students.forEach(student => {
+                const createdDate = student.created_at ? new Date(student.created_at) : new Date();
+                const isSelected = selectedStudentId === student.id;
+                
+                html += `
+                    <tr class="student-row ${isSelected ? 'selected' : ''}" data-id="${student.id}">
+                        <td>#${student.id}</td>
+                        <td><strong>${student.student_name || '—'}</strong></td>
+                        <td>${student.father_name || '—'}</td>
+                        <td>${student.course || '—'}</td>
+                        <td><span class="date-badge">${formatDate(createdDate)}</span></td>
+                        <td><span class="time-badge">${formatTime(createdDate)}</span></td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            studentsContainer.innerHTML = html;
+
+            // Add click handlers to rows
+            document.querySelectorAll('.student-row').forEach(row => {
+                row.addEventListener('click', () => {
+                    const id = parseInt(row.dataset.id);
+                    selectedStudentId = id;
+                    showStudentDetail(id);
+                    
+                    // Update selected row style
+                    document.querySelectorAll('.student-row').forEach(r => r.classList.remove('selected'));
+                    row.classList.add('selected');
+                });
+            });
+        }
+
+        // Show student detail
+        async function showStudentDetail(id) {
+            try {
+                const { data, error } = await supabase
+                    .from('admission')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+
+                const student = data;
+                const createdDate = student.created_at ? new Date(student.created_at) : new Date();
+
+                detailPanel.style.display = 'block';
+                detailPanel.innerHTML = `
+                    <div class="detail-panel">
+                        <div class="detail-header">
+                            <h3>
+                                Student Record 
+                                <span class="id-badge">ID: ${student.id}</span>
+                            </h3>
+                            <button class="back-btn" onclick="document.getElementById('detailPanel').style.display='none'; document.querySelectorAll('.student-row').forEach(r => r.classList.remove('selected')); selectedStudentId=null;">
+                                ← Back to list
+                            </button>
+                        </div>
+
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="label">Student Name</div>
+                                <div class="value">${student.student_name || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Father Name</div>
+                                <div class="value">${student.father_name || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Gender</div>
+                                <div class="value">${student.gender || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Date of Birth</div>
+                                <div class="value">${student.dob ? formatDate(student.dob) : '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">CNIC / B-Form</div>
+                                <div class="value small">${student.cnic || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Contact Number</div>
+                                <div class="value">${student.contact_number || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Email</div>
+                                <div class="value small">${student.email || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Address</div>
+                                <div class="value small">${student.address || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Previous Qualification</div>
+                                <div class="value">${student.previous_qualification || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Marks / Percentage</div>
+                                <div class="value">${student.mark || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Course / Program</div>
+                                <div class="value">${student.course || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Religion</div>
+                                <div class="value">${student.religion || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Signature</div>
+                                <div class="value small">${student.sign || '—'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Registration Date</div>
+                                <div class="value small">${formatDate(createdDate)} at ${formatTime(createdDate)}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="label">Record ID</div>
+                                <div class="value small">#${student.id}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Scroll to detail
+                detailPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            } catch (error) {
+                console.error('Error loading student detail:', error);
+                alert('Could not load student details');
+            }
+        }
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            
+            if (!term) {
+                renderStudentsList(allStudents);
+                return;
+            }
+
+            const filtered = allStudents.filter(s => 
+                (s.student_name && s.student_name.toLowerCase().includes(term)) ||
+                (s.father_name && s.father_name.toLowerCase().includes(term)) ||
+                (s.course && s.course.toLowerCase().includes(term)) ||
+                (s.email && s.email.toLowerCase().includes(term)) ||
+                (s.cnic && s.cnic.includes(term))
+            );
+
+            renderStudentsList(filtered);
+        });
+
+        // Initial load
+        loadStudents();
+
+        // Refresh every 30 seconds
+        setInterval(loadStudents, 30000);
+    </script>
+
+    <script type="module" src="supabase-config.js"></script>
+</body>
+</html>

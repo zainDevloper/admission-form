@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darulfalah · Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f4f7fc;
+            --card: #ffffff;
+            --text: #0e2a41;
+            --text-light: #496f92;
+            --border: #dee9f2;
+            --accent: #1a4b6d;
+            --accent-light: #e3f0fd;
+            --success: #0f6b47;
+            --success-light: #e1f7ea;
+            --danger: #b13e4b;
+            --danger-light: #fee9eb;
+            --warning: #b76e1e;
+            --warning-light: #fff1e0;
+            --shadow: 0 25px 50px -20px rgba(0, 35, 70, 0.3);
+        }
+
+        .dark-mode {
+            --bg: #0c1622;
+            --card: #172635;
+            --text: #ecf3fc;
+            --text-light: #9bb9da;
+            --border: #263a4f;
+            --accent: #3b82f6;
+            --accent-light: #1e3a5f;
+            --success: #22c55e;
+            --success-light: #1a4030;
+            --danger: #f87171;
+            --danger-light: #3b2329;
+            --warning: #fbbf24;
+            --warning-light: #3a3120;
+            --shadow: 0 25px 50px -20px #000000;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            transition: all 0.3s;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(26, 75, 109, 0.03) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(26, 75, 109, 0.03) 0%, transparent 30%),
+                repeating-linear-gradient(45deg, rgba(26, 75, 109, 0.01) 0px, rgba(26, 75, 109, 0.01) 1px, transparent 1px, transparent 10px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header with logo box */
+        .header {
+            background: var(--card);
+            border-radius: 40px;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--success), var(--warning));
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* Logo box */
+        .logo-box {
+            background: white;
+            border-radius: 20px;
+            padding: 8px;
+            box-shadow: 0 10px 20px -10px var(--accent);
+            border: 2px solid var(--accent);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        .logo-img {
+            height: 50px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .header-left h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: var(--border);
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text);
+            transition: 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-light);
+        }
+
+        .logout-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 16px -8px var(--accent);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -10px var(--accent);
+        }
+
+        /* Stats Cards - Clickable */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border-radius: 32px;
+            padding: 1.8rem;
+            border: 2px solid transparent;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent);
+        }
+
+        .stat-card.active {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .stat-card .label {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-card .number {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-card .sub {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* Search Section */
+        .search-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: var(--card);
+            padding: 1.2rem 2rem;
+            border-radius: 60px;
+            border: 1px solid var(--border);
+        }
+
+        .filter-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .filter-info h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .clear-filter {
+            background: var(--border);
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: var(--text);
+            display: none;
+        }
+
+        .clear-filter.show {
+            display: block;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 60px;
+            overflow: hidden;
+        }
+
+        .search-wrapper input {
+            background: transparent;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            outline: none;
+            width: 280px;
+        }
+
+        .search-wrapper button {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .search-wrapper button:hover {
+            background: #234f73;
+        }
+
+        /* Students Grid */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .student-card {
+            background: var(--card);
+            border-radius: 32px;
+            padding: 1.8rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            transition: 0.2s;
+        }
+
+        .student-card[data-status="approved"]::before {
+            background: var(--success);
+        }
+
+        .student-card[data-status="rejected"]::before {
+            background: var(--danger);
+        }
+
+        .student-card[data-status="pending"]::before {
+            background: var(--warning);
+        }
+
+        .student-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent);
+            box-shadow: 0 30px 50px -20px var(--accent);
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .student-avatar {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            transform: rotate(-3deg);
+            transition: 0.3s;
+            box-shadow: 0 10px 20px -10px var(--accent);
+        }
+
+        .student-card:hover .student-avatar {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-info h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+
+        .student-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+        }
+
+        .status-badge.approved {
+            background: var(--success-light);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-badge.rejected {
+            background: var(--danger-light);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .status-badge.pending {
+            background: var(--warning-light);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .student-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .meta-tag {
+            background: var(--bg);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+
+        .meta-tag.id {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+
+        /* Detail Page */
+        .detail-page {
+            background: var(--card);
+            border-radius: 48px;
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin: 1rem auto;
+            max-width: 1200px;
+            width: 100%;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .detail-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .detail-status {
+            font-size: 1rem;
+            padding: 0.4rem 1.5rem;
+            border-radius: 40px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-back:hover {
+            background: var(--accent-light);
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-approve:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -8px var(--success);
+        }
+
+        .btn-reject {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-reject:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -8px var(--danger);
+        }
+
+        /* Detail Grid - Clean two-column layout */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .detail-item {
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 1rem 1.5rem;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: baseline;
+            transition: 0.2s;
+        }
+
+        .detail-item:hover {
+            border-color: var(--accent);
+            background: var(--card);
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-light);
+            min-width: 160px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+            color: var(--text);
+            font-size: 1rem;
+            word-break: normal;
+            white-space: nowrap;
+            overflow-x: auto;
+            flex: 1;
+            text-align: right;
+        }
+
+        .detail-value.small {
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 1000px) {
+            .detail-value {
+                white-space: normal;
+                text-align: left;
+            }
+        }
+
+        /* Images Section */
+        .images-section {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .images-section h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2rem;
+        }
+
+        .images-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .image-card {
+            background: var(--bg);
+            border-radius: 32px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+
+        .image-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 25px 40px -18px var(--accent);
+        }
+
+        .image-title {
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .image-frame {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 3px solid var(--border);
+            cursor: pointer;
+            transition: 0.3s;
+            background: var(--card);
+        }
+
+        .image-card:hover .image-frame {
+            border-color: var(--accent);
+        }
+
+        .image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.3s;
+        }
+
+        .image-card:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: var(--card);
+            border-radius: 48px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid var(--border);
+            animation: scaleIn 0.3s;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .message-preview {
+            background: var(--bg);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .message-preview .number {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .message-preview .msg {
+            color: var(--text);
+            font-style: italic;
+            white-space: pre-line;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-send {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 2;
+        }
+
+        .btn-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -8px #25D366;
+        }
+
+        .btn-cancel {
+            background: var(--border);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Image Zoom Modal */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 20px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        /* Loading */
+        .loading-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-light);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            .images-row {
+                grid-template-columns: 1fr;
+            }
+            .detail-item {
+                flex-wrap: wrap;
+            }
+            .detail-label {
+                min-width: 100%;
+                margin-bottom: 0.3rem;
+            }
+            .detail-value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header with logo box -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo-box">
+                    <img src="logo.jpg" alt="Darulfalah" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiMxYTRiNmQiLz48dGV4dCB4PSIyNSIgeT0iMzUiIGZvbnQtc2l6ZT0iMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0iSW50ZXIsIHNhbnMtc2VyaWYiPkQ8L3RleHQ+PC9zdmc+';">
+                </div>
+                <h1>Darulfalah Administration</h1>
+            </div>
+            <div class="header-right">
+                <div class="theme-toggle" id="themeToggle">🌙 Dark</div>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+
+        <!-- Stats Cards (Clickable) -->
+        <div class="stats-grid">
+            <div class="stat-card" data-filter="all" id="statAll">
+                <div class="label">📊 Total Students</div>
+                <div class="number" id="totalCount">0</div>
+                <div class="sub">all applications</div>
+            </div>
+            <div class="stat-card" data-filter="week" id="statWeek">
+                <div class="label">📅 This Week</div>
+                <div class="number" id="weekCount">0</div>
+                <div class="sub">new admissions</div>
+            </div>
+            <div class="stat-card" data-filter="today" id="statToday">
+                <div class="label">⭐ Today</div>
+                <div class="number" id="todayCount">0</div>
+                <div class="sub">registrations</div>
+            </div>
+            <div class="stat-card" data-filter="pending" id="statPending">
+                <div class="label">⏳ Pending</div>
+                <div class="number" id="pendingCount">0</div>
+                <div class="sub">need review</div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="filter-info">
+                <h2 id="viewTitle">All Students</h2>
+                <button class="clear-filter" id="clearFilterBtn">✕ Clear Filter</button>
+            </div>
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Search by name, father, course...">
+                <button id="searchBtn">Search</button>
+            </div>
+        </div>
+
+        <!-- Students Grid / Detail View -->
+        <div id="studentsGrid" class="students-grid">
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading students...</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from './supabase-config.js';
+
+        // Check authentication
+        if (!sessionStorage.getItem('adminUser')) {
+            window.location.href = 'admin-auth.html';
+        }
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light' : '🌙 Dark';
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('adminUser');
+            window.location.href = 'admin-auth.html';
+        });
+
+        // State
+        let allStudents = [];
+        let currentFilter = 'all';
+        let isDetailView = false; // Track if we're in detail view
+
+        // Elements
+        const studentsGrid = document.getElementById('studentsGrid');
+        const totalCountEl = document.getElementById('totalCount');
+        const weekCountEl = document.getElementById('weekCount');
+        const todayCountEl = document.getElementById('todayCount');
+        const pendingCountEl = document.getElementById('pendingCount');
+        const viewTitle = document.getElementById('viewTitle');
+        const clearFilterBtn = document.getElementById('clearFilterBtn');
+
+        // Format date
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-PK', { 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+        }
+
+        // Safe value display (never show 0 or empty as 0)
+        function safeValue(val, defaultValue = '—') {
+            if (val === undefined || val === null || val === '') return defaultValue;
+            if (typeof val === 'number' && val === 0) return defaultValue;
+            return val;
+        }
+
+        // Format phone for WhatsApp
+        function formatPhoneForWhatsApp(phone) {
+            if (!phone) return '';
+            let cleaned = phone.replace(/\D/g, '');
+            if (cleaned.startsWith('03')) {
+                cleaned = '92' + cleaned.substring(1);
+            }
+            return cleaned;
+        }
+
+        // Send WhatsApp message
+        async function sendWhatsAppMessage(phone, studentName, status) {
+            const formattedPhone = formatPhoneForWhatsApp(phone);
+            
+            let message;
+            if (status === 'approved') {
+                message = `Assalam-o-Alaikum ${studentName},\n\n` +
+                    `🎉 Congratulations! Your application for Darulfalah has been APPROVED.\n\n` +
+                    `Please visit the masjid at your earliest convenience with original documents.\n\n` +
+                    `JazakAllah Khair\n` +
+                    `Darulfalah Administration`;
+            } else {
+                message = `Assalam-o-Alaikum ${studentName},\n\n` +
+                    `Thank you for applying to Darulfalah. After careful review of your application, ` +
+                    `we regret to inform you that we are unable to proceed with your admission at this time.\n\n` +
+                    `This decision is based on our current admission criteria. We encourage you to apply again in the future.\n\n` +
+                    `JazakAllah Khair\n` +
+                    `Darulfalah Administration`;
+            }
+            
+            const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Update student status
+        async function updateStudentStatus(studentId, status) {
+            try {
+                // First check if column exists by trying to update
+                const { error } = await supabase
+                    .from('admission')
+                    .update({ application_status: status })
+                    .eq('id', studentId);
+
+                if (error) {
+                    // If column doesn't exist, create it using a different approach
+                    console.error('Update error:', error);
+                    
+                    // Try to insert with the column (Supabase will create it if RLS allows)
+                    const { error: alterError } = await supabase
+                        .from('admission')
+                        .update({ application_status: status })
+                        .eq('id', studentId);
+                    
+                    if (alterError) throw alterError;
+                }
+                
+                // Update local data
+                const student = allStudents.find(s => s.id === studentId);
+                if (student) {
+                    student.application_status = status;
+                }
+                
+                // Refresh the detail view without going back to list
+                if (isDetailView) {
+                    showStudentDetail(studentId);
+                } else {
+                    filterStudents();
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Failed to update status. Please check if application_status column exists in your database.');
+                return false;
+            }
+        }
+
+        // Load students
+        async function loadStudents() {
+            try {
+                const { data, error } = await supabase
+                    .from('admission')
+                    .select('*')
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+
+                allStudents = data || [];
+                
+                // Add status field if not exists
+                allStudents.forEach(s => {
+                    if (!s.application_status) {
+                        s.application_status = 'pending';
+                    }
+                });
+                
+                updateStats();
+                
+                // Only refresh the view if we're not in detail view
+                if (!isDetailView) {
+                    filterStudents();
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                if (!isDetailView) {
+                    studentsGrid.innerHTML = '<div class="loading-state">Failed to load students</div>';
+                }
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+            
+            let weekCount = 0;
+            let todayCount = 0;
+            let pendingCount = 0;
+            
+            allStudents.forEach(student => {
+                const created = student.created_at ? new Date(student.created_at) : new Date();
+                if (created >= weekAgo) weekCount++;
+                if (created >= today) todayCount++;
+                if (student.application_status === 'pending') pendingCount++;
+            });
+            
+            totalCountEl.textContent = allStudents.length;
+            weekCountEl.textContent = weekCount;
+            todayCountEl.textContent = todayCount;
+            pendingCountEl.textContent = pendingCount;
+        }
+
+        // Filter students based on current filter
+        function filterStudents() {
+            if (isDetailView) return; // Don't filter if in detail view
+            
+            let filtered = [...allStudents];
+            const now = new Date();
+            
+            switch(currentFilter) {
+                case 'week':
+                    const weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+                    filtered = filtered.filter(s => new Date(s.created_at || now) >= weekAgo);
+                    viewTitle.textContent = 'This Week';
+                    break;
+                case 'today':
+                    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    filtered = filtered.filter(s => new Date(s.created_at || now) >= today);
+                    viewTitle.textContent = 'Today';
+                    break;
+                case 'pending':
+                    filtered = filtered.filter(s => s.application_status === 'pending');
+                    viewTitle.textContent = 'Pending Review';
+                    break;
+                default:
+                    viewTitle.textContent = 'All Students';
+            }
+            
+            clearFilterBtn.classList.toggle('show', currentFilter !== 'all');
+            renderStudentsGrid(filtered);
+        }
+
+        // Render students grid
+        function renderStudentsGrid(students) {
+            if (isDetailView) return; // Don't render grid if in detail view
+            
+            if (!students || students.length === 0) {
+                studentsGrid.innerHTML = '<div class="loading-state">No students found</div>';
+                return;
+            }
+
+            let html = '';
+            students.forEach(student => {
+                const initials = student.student_name ? student.student_name.charAt(0).toUpperCase() : '?';
+                const created = student.created_at ? formatDate(student.created_at) : '—';
+                const status = student.application_status || 'pending';
+                
+                html += `
+                    <div class="student-card" data-id="${student.id}" data-status="${status}">
+                        <div class="student-header">
+                            <div class="student-avatar">${initials}</div>
+                            <div class="student-info">
+                                <h3>${student.student_name || 'Unnamed'}</h3>
+                                <p>${student.father_name || '—'}</p>
+                                <span class="status-badge ${status}">${status}</span>
+                            </div>
+                        </div>
+                        <div class="student-meta">
+                            <span class="meta-tag id">#${student.id}</span>
+                            <span class="meta-tag">${student.course || 'No course'}</span>
+                            <span class="meta-tag">${created}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            studentsGrid.innerHTML = html;
+
+            // Add click handlers
+            document.querySelectorAll('.student-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const id = parseInt(card.dataset.id);
+                    showStudentDetail(id);
+                });
+            });
+        }
+
+        // Show student detail (clean two-column layout)
+        function showStudentDetail(id) {
+            const student = allStudents.find(s => s.id === id);
+            if (!student) return;
+
+            isDetailView = true; // Set detail view flag
+            const created = student.created_at ? new Date(student.created_at) : new Date();
+            const status = student.application_status || 'pending';
+
+            // Helper for images
+            const createImageBox = (url, title, icon) => {
+                if (!url) {
+                    return `
+                        <div class="image-card">
+                            <div class="image-title">${icon} ${title}</div>
+                            <div class="image-frame" style="display:flex;align-items:center;justify-content:center;background:var(--border);color:var(--text-light);">
+                                No Image
+                            </div>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="image-card">
+                        <div class="image-title">${icon} ${title}</div>
+                        <div class="image-frame" onclick="window.openImageModal('${url}')">
+                            <img src="${url}" alt="${title}">
+                        </div>
+                    </div>
+                `;
+            };
+
+            studentsGrid.innerHTML = `
+                <div class="detail-page" style="grid-column: 1 / -1;">
+                    <div class="detail-header">
+                        <h2>
+                            Student #${student.id}
+                            <span class="status-badge ${status} detail-status">${status}</span>
+                        </h2>
+                        <div class="header-actions">
+                            <button class="btn btn-back" id="backToListBtn">← Back</button>
+                            ${status !== 'approved' ? `<button class="btn btn-approve" id="approveBtn">✅ Approve</button>` : ''}
+                            ${status !== 'rejected' ? `<button class="btn btn-reject" id="rejectBtn">❌ Reject</button>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Student Name</span>
+                            <span class="detail-value">${safeValue(student.student_name)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Father Name</span>
+                            <span class="detail-value">${safeValue(student.father_name)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Gender</span>
+                            <span class="detail-value">${safeValue(student.gender)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Date of Birth</span>
+                            <span class="detail-value">${safeValue(formatDate(student.dob))}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">CNIC / B-Form</span>
+                            <span class="detail-value small">${safeValue(student.cnic)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Contact Number</span>
+                            <span class="detail-value">${safeValue(student.contact_number)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value small">${safeValue(student.email)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Address</span>
+                            <span class="detail-value small">${safeValue(student.address)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Previous Qualification</span>
+                            <span class="detail-value">${safeValue(student.previous_qualification)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Islamic Qualification</span>
+                            <span class="detail-value">${safeValue(student.islamic_qualification)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Marks / Percentage</span>
+                            <span class="detail-value">${safeValue(student.mark)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Course / Program</span>
+                            <span class="detail-value">${safeValue(student.course)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Religion</span>
+                            <span class="detail-value">${safeValue(student.religion)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Signature</span>
+                            <span class="detail-value small">${safeValue(student.sign)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Registration Date</span>
+                            <span class="detail-value small">${formatDate(created)} at ${created.toLocaleTimeString()}</span>
+                        </div>
+                    </div>
+
+                    <div class="images-section">
+                        <h3>📎 Uploaded Documents</h3>
+                        <div class="images-row">
+                            ${createImageBox(student.cnic_copy, 'CNIC / B-Form', '🪪')}
+                            ${createImageBox(student.previous_degree, 'Previous Degree', '🎓')}
+                            ${createImageBox(student.alumaislamiya_copy, 'Aluma Islamiya', '📖')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Back button
+            document.getElementById('backToListBtn').addEventListener('click', () => {
+                isDetailView = false; // Exit detail view
+                filterStudents();
+            });
+
+            // Approve button
+            document.getElementById('approveBtn')?.addEventListener('click', async () => {
+                const phone = student.contact_number;
+                const name = student.student_name;
+
+                if (!phone) {
+                    alert('❌ No phone number found');
+                    return;
+                }
+
+                // Show confirmation modal
+                const modalHtml = `
+                    <div class="modal-overlay" id="modalOverlay">
+                        <div class="modal-content">
+                            <h3>✅ Approve Application</h3>
+                            <p>Send approval message to ${name || 'student'}?</p>
+                            <div class="message-preview">
+                                <div class="number">📱 ${phone}</div>
+                                <div class="msg">"Congratulations! Your application has been APPROVED..."</div>
+                            </div>
+                            <div class="modal-actions">
+                                <button class="btn-send" id="confirmSendBtn">Send via WhatsApp</button>
+                                <button class="btn-cancel" id="cancelModalBtn">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                document.getElementById('confirmSendBtn').addEventListener('click', async () => {
+                    const success = await updateStudentStatus(student.id, 'approved');
+                    if (success) {
+                        sendWhatsAppMessage(phone, name, 'approved');
+                    }
+                    document.getElementById('modalOverlay').remove();
+                });
+
+                document.getElementById('cancelModalBtn').addEventListener('click', () => {
+                    document.getElementById('modalOverlay').remove();
+                });
+            });
+
+            // Reject button
+            document.getElementById('rejectBtn')?.addEventListener('click', async () => {
+                const phone = student.contact_number;
+                const name = student.student_name;
+
+                if (!phone) {
+                    alert('❌ No phone number found');
+                    return;
+                }
+
+                const modalHtml = `
+                    <div class="modal-overlay" id="modalOverlay">
+                        <div class="modal-content">
+                            <h3>❌ Reject Application</h3>
+                            <p>Send rejection message to ${name || 'student'}?</p>
+                            <div class="message-preview">
+                                <div class="number">📱 ${phone}</div>
+                                <div class="msg">"Thank you for applying. We regret to inform you that your application has not been selected..."</div>
+                            </div>
+                            <div class="modal-actions">
+                                <button class="btn-send" id="confirmSendBtn">Send via WhatsApp</button>
+                                <button class="btn-cancel" id="cancelModalBtn">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                document.getElementById('confirmSendBtn').addEventListener('click', async () => {
+                    const success = await updateStudentStatus(student.id, 'rejected');
+                    if (success) {
+                        sendWhatsAppMessage(phone, name, 'rejected');
+                    }
+                    document.getElementById('modalOverlay').remove();
+                });
+
+                document.getElementById('cancelModalBtn').addEventListener('click', () => {
+                    document.getElementById('modalOverlay').remove();
+                });
+            });
+        }
+
+        // Image zoom function
+        window.openImageModal = (imageUrl) => {
+            const modalHtml = `
+                <div class="image-modal" onclick="this.remove()">
+                    <span class="close-modal" onclick="event.stopPropagation();this.parentElement.remove()">×</span>
+                    <img src="${imageUrl}" alt="Zoomed Image" onclick="event.stopPropagation()">
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        };
+
+        // Filter click handlers
+        document.getElementById('statAll').addEventListener('click', () => {
+            if (isDetailView) return; // Don't change filter in detail view
+            currentFilter = 'all';
+            filterStudents();
+        });
+
+        document.getElementById('statWeek').addEventListener('click', () => {
+            if (isDetailView) return;
+            currentFilter = 'week';
+            filterStudents();
+        });
+
+        document.getElementById('statToday').addEventListener('click', () => {
+            if (isDetailView) return;
+            currentFilter = 'today';
+            filterStudents();
+        });
+
+        document.getElementById('statPending').addEventListener('click', () => {
+            if (isDetailView) return;
+            currentFilter = 'pending';
+            filterStudents();
+        });
+
+        // Clear filter
+        clearFilterBtn.addEventListener('click', () => {
+            if (isDetailView) return;
+            currentFilter = 'all';
+            filterStudents();
+        });
+
+        // Search
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            if (isDetailView) return; // Don't search in detail view
+            
+            const term = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (!term) {
+                filterStudents();
+                return;
+            }
+
+            const filtered = allStudents.filter(s => 
+                (s.student_name && s.student_name.toLowerCase().includes(term)) ||
+                (s.father_name && s.father_name.toLowerCase().includes(term)) ||
+                (s.course && s.course.toLowerCase().includes(term)) ||
+                (s.email && s.email.toLowerCase().includes(term)) ||
+                (s.cnic && s.cnic.includes(term))
+            );
+
+            renderStudentsGrid(filtered);
+        });
+
+        // Enter key in search
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('searchBtn').click();
+            }
+        });
+
+        // Initial load
+        loadStudents();
+
+        // Refresh every 15 seconds (but don't interrupt detail view)
+        setInterval(() => {
+            if (!isDetailView) {
+                loadStudents();
+            }
+        }, 15000);
+    </script>
+
+    <script type="module" src="supabase-config.js"></script>
+</body>
+</html>

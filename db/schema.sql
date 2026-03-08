@@ -1,0 +1,21 @@
+CREATE TABLE admission (
+    id SERIAL PRIMARY KEY,
+    student_name TEXT NOT NULL,
+    gender TEXT,
+    father_name TEXT,
+    dob DATE,
+    cnic TEXT,
+    address TEXT,
+    contact_number TEXT,
+    email TEXT,
+    previous_qualification TEXT,
+    islamic_qualification TEXT,
+    mark TEXT,
+    course TEXT,
+    religion TEXT,
+    sign TEXT,
+    cnic_copy TEXT,
+    previous_degree TEXT,
+    alumaislamiya_copy TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
