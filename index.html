@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darulfalah · Admissions 2026</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+    <style>
+        body[lang="ur"] input[type="date"]{
+            font-family:'Noto Nastaliq Urdu', serif;
+            direction:ltr;
+            text-align:left;
+            }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .lang-switch{
+display:flex;
+gap:10px;
+}
+
+        .lang-btn{
+        padding:8px 18px;
+        border-radius:40px;
+        border:none;
+        font-weight:600;
+        font-size:14px;
+        cursor:pointer;
+        background:#f0f4f8;
+        color:#1b3b59;
+        transition:0.25s;
+        box-shadow:0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .lang-btn:hover{
+        background:#144e7a;
+        color:white;
+        transform:translateY(-2px);
+        }
+
+        .lang-btn.active{
+        background:#052844;
+        color:white;
+        }
+
+        body {
+            background: #e8f0fe;
+            background-image: radial-gradient(circle at 10% 20%, rgba(44, 82, 130, 0.08) 0%, transparent 30%),
+                            radial-gradient(circle at 90% 70%, rgba(25, 65, 105, 0.08) 0%, transparent 35%);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+
+            display: flex;
+            flex-direction: column;
+        }
+        .main-card {
+            margin: auto;
+        }
+
+        .main-card {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-radius: 48px;
+            box-shadow: 0 50px 80px -30px #0a2647, 0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+            padding: 2.5rem;
+            position: relative;
+        }
+
+        /* HEADER - logo left, title centered */
+        .header {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:20px;
+            margin-bottom:2.5rem;
+            }
+
+        .logo-frame {
+            width: 110px;
+            height: 110px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 20px 30px -16px #1d3a5c;
+            border: 3px solid #ffffff;
+            overflow: hidden;   /* IMPORTANT - image ko frame ke andar crop karega */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;   /* padding remove */
+        }
+
+        .logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;   /* Image perfectly fill karegi */
+            border-radius: 50%;  /* Circle shape */
+        }
+
+        .header h2 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    background: linear-gradient(140deg, #102b44, #274e7c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    text-shadow: 0 8px 16px rgba(25, 60, 100, 0.15);
+    margin: 0;
+}
+
+        /* FORM - clean professional rows */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .field-group {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.2rem;
+            background: #f2f7fd;
+            padding: 0.7rem 1.8rem;
+            border-radius: 70px;
+            border: 1px solid #dae6f2;
+            transition: 0.2s;
+        }
+        .field-group:focus-within {
+            background: #ffffff;
+            border-color: #2a6b9e;
+            box-shadow: 0 10px 25px -16px #1d4c7a;
+        }
+
+        .field-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1b3b59;
+            min-width: 145px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .field-input, #address-field {
+            flex: 1 1 240px;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #0a253d;
+            outline: none;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .field-input::placeholder, #address-field::placeholder {
+            color: #8ba3c0;
+            font-weight: 400;
+        }
+
+        #address-field {
+            min-height: 52px;
+            resize: vertical;
+            background: rgba(255,255,255,0.5);
+            border-radius: 30px;
+        }
+
+        /* BUTTON - premium custom design */
+        .action-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2.5rem;
+        }
+
+        .submit-btn {
+            background: #052844;
+            border: none;
+            padding: 18px 54px;
+            border-radius: 200px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 20px 35px -12px #03263f, 0 0 0 2px rgba(255, 255, 255, 0.3) inset;
+            transition: all 0.35s cubic-bezier(0.2, 0.8, 0.4, 1.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.03em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: "▹▹";
+            font-size: 1.8rem;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #144e7a;
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 35px 50px -16px #0c3f62, 0 0 0 4px rgba(255, 255, 255, 0.6) inset;
+        }
+
+        .submit-btn:hover::before {
+            content: "✦✦";
+            transform: translateX(8px);
+            opacity: 1;
+        }
+
+        .submit-btn:active {
+            transform: translateY(4px) scale(0.98);
+            box-shadow: 0 12px 25px -10px #021d31;
+        }
+
+        .submit-btn.submitting {
+            opacity: 0.8;
+            transform: scale(0.99);
+            pointer-events: none;
+            background: #1a4b6d;
+        }
+
+        /* ERROR STYLES */
+        .error-highlight {
+            background: #ffefef !important;
+            border: 2px solid #c93e4c !important;
+        }
+
+        #message-area {
+            margin-top: 1.8rem;
+            position: relative;
+        }
+
+        .error-badge {
+            background: #fff0f0;
+            color: #b32b40;
+            border-left: 12px solid #cf3246;
+            padding: 1.2rem 2rem;
+            border-radius: 80px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 12px 28px -12px #f3b5b5;
+            animation: warn-shake 0.5s ease;
+        }
+
+        @keyframes warn-shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        /* MODAL POPUP - stunning success message */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-popup {
+            background: linear-gradient(145deg, #1a4d2e, #0f3b22);
+            color: white;
+            padding: 3rem 4rem;
+            border-radius: 120px;
+            text-align: center;
+            box-shadow: 0 50px 80px -20px #0a3b1e, 0 0 0 8px #c3f7d6 inset, 0 0 0 12px rgba(255, 255, 255, 0.2) inset;
+            border-left: 15px solid #b3ffc8;
+            animation: popRise 0.6s cubic-bezier(0.18, 1.3, 0.4, 1.1);
+            max-width: 600px;
+            width: 90%;
+            transform-origin: center;
+        }
+
+        .success-popup h3 {
+            font-size: 3.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            text-shadow: 0 5px 15px #062010;
+        }
+
+        .success-popup p {
+            font-size: 1.6rem;
+            opacity: 0.95;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .success-popup .emoji-big {
+            font-size: 5rem;
+            line-height: 1;
+            margin: 0.5rem 0;
+            filter: drop-shadow(0 8px 12px #062010);
+            animation: bounceLight 2s infinite;
+        }
+
+        .success-popup .db-icon {
+            background: #ffffff20;
+            padding: 0.8rem 1.8rem;
+            border-radius: 60px;
+            display: inline-block;
+            margin-top: 1.2rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border: 2px solid #ffffff60;
+            backdrop-filter: blur(4px);
+        }
+
+        @keyframes popRise {
+            0% { opacity: 0; transform: scale(0.3) translateY(100px) rotate(-5deg); }
+            50% { transform: scale(1.1) translateY(-15px) rotate(2deg); }
+            100% { opacity: 1; transform: scale(1) translateY(0) rotate(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceLight {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* close button for popup */
+        .close-popup {
+            background: white;
+            color: #0f3b22;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            border: 2px solid #b3ffc8;
+            transition: 0.2s;
+        }
+
+        .close-popup:hover {
+            transform: scale(1.05);
+            background: #f0fff0;
+        }
+
+        @media (max-width: 700px) {
+            .main-card { padding: 1.8rem; }
+            .header h2 { font-size: 1.8rem; white-space: normal; position: static; transform: none; margin-top: 12px; }
+            .header { flex-wrap: wrap; }
+            .success-popup { padding: 2rem; }
+            .success-popup h3 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <div class="header">
+            <div class="logo-frame">
+                <img src="logo.jpg" alt="Darulfalah" class="logo" onerror="this.parentElement.innerHTML='<span style=font-size:2rem;font-weight:800;color:#0b3853;>D</span>'">
+            </div>
+            <h2 data-key="title">Darulfalah International Form</h2>
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="setLanguage('en')">English</button>
+                <button class="lang-btn" onclick="setLanguage('ur')">اردو</button>
+                </div>
+        </div>
+        
+
+        <form id="admissionForm">
+            <!-- all fields exactly as DB columns -->
+            <div class="field-group">
+                <label class="field-label" data-key="student_name">Student Name</label>
+                <input type="text" placeholder="Full name" class="field-input" id="studentName">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="gender">Gender</label>
+                <input type="text" placeholder="Male / Female / Other" class="field-input" id="gender">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="father_name">Father Name</label>
+                <input type="text" placeholder="Father's full name" class="field-input" id="fatherName">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="dob">Date of Birth</label>
+                <input type="date" class="field-input" id="dob">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="cnic">CNIC / B-Form</label>
+                <input type="text" placeholder="XXXXX-XXXXXXX-X" class="field-input" id="cnic">
+            </div>
+            <div class="field-group" style="align-items:flex-start">
+                <label class="field-label" data-key="address">Address</label>
+                <textarea id="addressField" class="field-input" placeholder="Street, city, country" rows="2"></textarea>
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="contact">Whatsapp Number</label>
+                <input type="text" placeholder="0300 1234567" class="field-input" id="contact">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="email">Email</label>
+                <input type="email" placeholder="name@example.com" class="field-input" id="email">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="prev_qualification">Previous Qualification</label>
+                <input type="text" placeholder="e.g. F.Sc, ICS" class="field-input" id="prevQual">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="islamic_qualification">Islamic Qualification</label>
+                <input type="text" placeholder="e.g. Hifz, education" class="field-input" id="Islqual">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="marks">Marks / Percentage</label>
+                <input type="text" placeholder="85% or 850/1100" class="field-input" id="marks">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="course">Course / Program</label>
+                <input type="text" placeholder="e.g. Web development" class="field-input" id="course">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="religion">Religion</label>
+                <input type="text" placeholder="Religion" class="field-input" id="religion">
+            </div>
+            <div class="field-group">
+                <label class="field-label" data-key="signature">Signature</label>
+                <input type="text" placeholder="Full name / e-sign" class="field-input" id="signature">
+            </div>
+        
+
+        <div class="field-group">
+            <label class="field-label" data-key="cnic_copy">CNIC Copy</label>
+            <input type="file" class="field-input" id="cnic_copy" accept="image/*" required>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label" data-key="prev_copy">Previous Degree Copy</label>
+            <input type="file" class="field-input" id="Priveious_deg" accept="image/*" required>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label" data-key="al_copy">Aluma Islamiya Copy</label>
+            <input type="file" class="field-input" id="Alumaislamiya_copy" accept="image/*" required>
+        </div>
+
+        <script>
+    function validateFiles() {
+
+            let cnic = document.getElementById("cnic_copy").files[0];
+            let degree = document.getElementById("Priveious_deg").files[0];
+            let aluma = document.getElementById("Alumaislamiya_copy").files[0];
+
+            if (!cnic || !degree || !aluma) {
+                alert("Please upload all required images!");
+                return false;
+            }
+
+            let maxSize = 2 * 1024 * 1024; // 2MB
+
+            let files = [cnic, degree, aluma];
+
+            for (let file of files) {
+
+                if (!file.type.startsWith("image/")) {
+                    alert("Only image files are allowed!");
+                    return false;
+                }
+
+                if (file.size > maxSize) {
+                    alert("File size must be less than 2MB!");
+                    return false;
+                }
+            }
+
+            alert("All images uploaded successfully ✅");
+            return true;
+            }
+        </script>
+
+            <div class="action-area">
+                <button type="button" class="submit-btn" id="realSubmitBtn">Submit</button>
+            </div>
+            <div id="message-area"></div>
+        </form>
+    </div>
+
+    <!-- Popup container (initially empty) -->
+    <div id="popupContainer"></div>
+
+    <script type="module">
+        import { supabase } from './supabase-config.js';
+        
+        // Get elements
+        const submitBtn = document.getElementById('realSubmitBtn');
+        const messageArea = document.getElementById('message-area');
+        const popupContainer = document.getElementById('popupContainer');
+        
+        // Input fields
+        const studentName = document.getElementById('studentName');
+        const gender = document.getElementById('gender');
+        const fatherName = document.getElementById('fatherName');
+        const dob = document.getElementById('dob');
+        const cnic = document.getElementById('cnic');
+        const addressField = document.getElementById('addressField');
+        const contact = document.getElementById('contact');
+        const email = document.getElementById('email');
+        const prevQual = document.getElementById('prevQual');
+        const Islqual = document.getElementById('Islqual');
+        const marks = document.getElementById('marks');
+        const course = document.getElementById('course');
+        const religion = document.getElementById('religion');
+        const signature = document.getElementById('signature');
+        const cnicFile = document.getElementById('cnic_copy').files[0];
+        const Priveious_deg = document.getElementById('Priveious_deg').files[0];
+        const Alumaislamiya_copy = document.getElementById('Alumaislamiya_copy').files[0];
+
+        const allFields = [
+            studentName, gender, fatherName, dob, cnic, addressField, 
+            contact, email, prevQual, Islqual, marks, course, religion, signature,
+            document.getElementById('cnic_copy'),           // ✅ Direct DOM element
+            document.getElementById('Priveious_deg'),       // ✅ Direct DOM element
+            document.getElementById('Alumaislamiya_copy')   // ✅ Direct DOM element
+        ];
+
+        // Helper functions
+        function clearAllErrors() {
+            allFields.forEach(field => {
+                if (field) field.classList.remove('error-highlight');
+            });
+            messageArea.innerHTML = '';
+        }
+
+        function showFieldError(field, message) {
+            if (field) field.classList.add('error-highlight');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-badge';
+            errorDiv.textContent = message;
+            messageArea.appendChild(errorDiv);
+        }
+
+        // Show stunning success popup
+        function showSuccessPopup(formData) {
+            popupContainer.innerHTML = `
+                <div class="success-overlay">
+                    <div class="success-popup">
+                        <div class="emoji-big">✦ 🎓 ✦</div>
+                        <h3>SUCCESS!</h3>
+                        <p>Form submitted to database</p>
+                        <div class="db-icon">Record saved · ID: ${Math.floor(Math.random() * 10000)}</div>
+                        <button class="close-popup" onclick="this.closest('.success-overlay').remove()">Continue</button>
+                    </div>
+                </div>
+            `;
+            
+            // Log for debugging
+            console.log('✅ DATABASE SAVED:', formData);
+        }
+
+        // Main validation and database submission
+        async function handleSubmit() {
+            clearAllErrors();
+
+            // Get values
+            const sName = studentName.value.trim();
+            const gnd = gender.value.trim();
+            const fName = fatherName.value.trim();
+            const dobVal = dob.value;
+            const cnicVal = cnic.value.trim();
+            const addr = addressField.value.trim();
+            const phone = contact.value.trim();
+            const mail = email.value.trim();
+            const qual = prevQual.value.trim();
+            const Islamic = Islqual.value.trim();
+            const marksVal = marks.value.trim();
+            const courseVal = course.value.trim();
+            const rel = religion.value.trim();
+            const sig = signature.value.trim();
+
+            // Files
+            const cnicFile = document.getElementById('cnic_copy').files[0];
+            const degreeFile = document.getElementById('Priveious_deg').files[0];
+            const alumaFile = document.getElementById('Alumaislamiya_copy').files[0];
+
+            let isValid = true;
+
+            // === VALIDATION CHECKS ===
+            if (!sName || sName.length < 3) {
+                showFieldError(studentName, '✗ Student name: minimum 3 characters required');
+                isValid = false;
+            }
+
+            if (!gnd) {
+                showFieldError(gender, '✗ Gender is required');
+                isValid = false;
+            }
+
+            if (!fName) {
+                showFieldError(fatherName, '✗ Father name is required');
+                isValid = false;
+            }
+
+            // DATE OF BIRTH - STRICT CHECK
+            if (!dobVal) {
+                showFieldError(dob, '✗ Date of birth is required');
+                isValid = false;
+            } else {
+                const birthDate = new Date(dobVal);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                birthDate.setHours(0, 0, 0, 0);
+                
+                if (birthDate > today) {
+                    showFieldError(dob, '✗ Birth date cannot be in the future');
+                    isValid = false;
+                } else {
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    
+                    if (age < 5) {
+                        showFieldError(dob, '✗ Age must be at least 5 years old');
+                        isValid = false;
+                    }
+                }
+            }
+
+            if (!cnicVal || !/^[0-9\-]{6,20}$/.test(cnicVal)) {
+                showFieldError(cnic, '✗ Valid CNIC/B-Form (digits and dashes only)');
+                isValid = false;
+            }
+
+            if (!addr || addr.length < 6) {
+                showFieldError(addressField, '✗ Address must be at least 6 characters');
+                isValid = false;
+            }
+
+            const phoneDigits = phone.replace(/\D/g, '');
+            if (!phone || phoneDigits.length < 9) {
+                showFieldError(contact, '✗ Phone number must have at least 9 digits');
+                isValid = false;
+            }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!mail || !emailPattern.test(mail)) {
+                showFieldError(email, '✗ Valid email required');
+                isValid = false;
+            }
+
+            if (!qual) {
+                showFieldError(prevQual, '✗ Previous qualification required');
+                isValid = false;
+            }
+
+            if (!Islamic) {
+                showFieldError(Islqual, '✗ Islamic qualification required');
+                isValid = false;
+            }
+
+            if (!marksVal) {
+                showFieldError(marks, '✗ Marks/percentage required');
+                isValid = false;
+            } else {
+                const markPattern = /^(\d{1,3}%|\d+\s*\/\s*\d+|\d{1,3}\s*percent)$/i;
+                if (!markPattern.test(marksVal) && isNaN(parseFloat(marksVal))) {
+                    showFieldError(marks, '✗ Use format: "85%", "850/1100"');
+                    isValid = false;
+                }
+            }
+
+            if (!courseVal) {
+                showFieldError(course, '✗ Course/Program is required');
+                isValid = false;
+            }
+
+            if (!rel) {
+                showFieldError(religion, '✗ Religion is required');
+                isValid = false;
+            }
+
+            if (!sig || sig.length < 2) {
+                showFieldError(signature, '✗ Signature must be at least 2 characters');
+                isValid = false;
+            }
+
+            if (!cnicFile) {
+                showFieldError(document.getElementById('cnic_copy'), '✗ Cnic Copy is required');
+                isValid = false;
+                }
+
+                if (!degreeFile) {
+                    showFieldError(document.getElementById('Priveious_deg'), '✗ Degree Copy is required');
+                    isValid = false;
+                }
+
+                if (!alumaFile) {
+                    showFieldError(document.getElementById('Alumaislamiya_copy'), '✗ Islamic Degree Copy required');
+                    isValid = false;
+                }
+
+            // If validation fails, stop here
+            if (!isValid) {
+                messageArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+
+            // ========== VALIDATION PASSED ==========
+             try {
+        // Show submitting state
+        submitBtn.classList.add('submitting');
+        submitBtn.textContent = 'Saving...';
+
+        // 🔹 UPLOAD FILES FIRST - GET URLs
+        async function uploadFile(file, folder) {
+            const fileName = `${folder}-${Date.now()}-${file.name}`;
+            const { error } = await supabase.storage
+                .from('documents')
+                .upload(fileName, file);
+            if (error) throw error;
+            
+            const { data: { publicUrl } } = supabase.storage
+                .from('documents')
+                .getPublicUrl(fileName);
+            return publicUrl;
+        }
+
+        // Upload all three files
+        const cnicUrl = await uploadFile(cnicFile, 'cnic');
+        const degreeUrl = await uploadFile(degreeFile, 'degree');
+        const alumaUrl = await uploadFile(alumaFile, 'aluma');
+
+        // Prepare data with URLs (NOT file objects)
+        const formData = {
+            student_name: sName,
+            gender: gnd,
+            father_name: fName,
+            dob: dobVal,
+            cnic: cnicVal,
+            address: addr,
+            contact_number: phone, // Store as string
+            email: mail,
+            previous_qualification: qual,
+            islamic_qualification: Islamic,
+            mark: marksVal,
+            course: courseVal,
+            religion: rel,
+            sign: sig,
+            cnic_copy: cnicUrl,              // ✅ URL stored
+            previous_degree: degreeUrl,        // ✅ URL stored
+            alumaislamiya_copy: alumaUrl       // ✅ URL stored
+        };
+
+        // Insert into database
+        const { error } = await supabase
+            .from('admission')
+            .insert([formData]);
+
+        if (error) throw error;
+
+        // Show success popup
+        showSuccessPopup(formData);
+        
+        // Reset form
+        document.getElementById('admissionForm').reset();
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error: ' + error.message);
+    } finally {
+        submitBtn.classList.remove('submitting');
+        submitBtn.innerHTML = '▹▹ Submit';
+    }
+}
+
+        // Attach click handler
+        submitBtn.addEventListener('click', handleSubmit);
+
+        // Remove error highlight on focus
+        allFields.forEach(field => {
+            if (field) {
+                field.addEventListener('focus', function() {
+                    this.classList.remove('error-highlight');
+                });
+            }
+        });
+
+        // Prevent Enter key from causing issues
+        document.getElementById('admissionForm').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSubmit();
+            }
+        });
+
+        // Close popup when clicking outside (optional)
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('success-overlay')) {
+                e.target.remove();
+            }
+        });
+
+    </script>
+
+    <!-- Keep script references exactly as required 
+    <script type="module" src="supabase-config.js"></script>
+    <script type="module" src="app.js"></script>-->
+    <script>
+    // Ensure the form uses app.js submit function
+    document.getElementById('admissionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // app.js ka function call hoga
+    });
+</script>
+<!-- Footer Start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<footer class="custom-footer">
+    <div class="footer-content">
+        <p>© 2026 Darulfalah. All Rights Reserved.</p>
+        <div class="social-links">
+            <a href="https://www.facebook.com/DaarulFalaah" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.youtube.com/@darulfalah---" target="_blank">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+
+<style>
+
+/* Footer styling */
+.custom-footer {
+    background: #052844;
+    padding: 20px 0;
+    text-align: center;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    margin-top: 40px;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+}
+
+.custom-footer .footer-content p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.85;
+}
+
+.custom-footer .social-links {
+    margin-top: 10px;
+}
+
+.custom-footer .social-links a {
+    color: white;
+    font-size: 24px;
+    margin: 0 15px;
+    display: inline-block;
+    transition: 0.3s;
+    vertical-align: middle;
+}
+
+.custom-footer .social-links a:hover {
+    color: #4da6ff;  /* Facebook style hover color */
+    transform: scale(1.2);
+}
+</style>
+<!-- Footer End -->
+ <script>
+
+const translations = {
+
+    en: {
+        title: "Darulfalah International Form",
+        student_name: "Student Name",
+        gender: "Gender",
+        father_name: "Father Name",
+        dob: "Date of Birth",
+        cnic: "CNIC / B-Form",
+        address: "Address",
+        contact: "Whatsapp Number",
+        email: "Email",
+        prev_qualification: "Previous Qualification",
+        islamic_qualification: "Islamic Qualification",
+        marks: "Marks / Percentage",
+        course: "Course / Program",
+        religion: "Religion",
+        signature: "Signature",
+        cnic_copy: "Cnic Copy",
+        prev_copy: "Previous Copy",
+        al_copy: "Aluma Islamiya Copy"
+    },
+
+    ur: {
+        title: "دارُالفَلَاح انٹرنیشنل فارم",
+        student_name: "طالب علم کا نام",
+        gender: "جنس",
+        father_name: "والد کا نام",
+        dob: "تاریخ پیدائش",
+        cnic: "شناختی کارڈ / ب فارم",
+        address: "پتہ",
+        contact: "واٹس ایپ نمبر",
+        email: "ای میل",
+        prev_qualification: "پچھلی تعلیمی قابلیت",
+        islamic_qualification: "اسلامی تعلیم",
+        marks: "نمبر / فیصد",
+        course: "کورس / پروگرام",
+        religion: "مذہب",
+        signature: "دستخط",
+        cnic_copy: "شناختی کارڈ کی کاپی",
+        prev_copy: "پچھلی ڈگری کی کاپی",
+        al_copy: "الومہ اسلامیہ کی کاپی"
+
+    }
+
+};
+
+    function setLanguage(lang){
+
+    document.body.setAttribute("lang", lang);
+
+    /* TEXT TRANSLATION */
+    document.querySelectorAll("[data-key]").forEach(el=>{
+    const key = el.getAttribute("data-key");
+    if(translations[lang][key]){
+    el.innerText = translations[lang][key];
+    }
+    });
+
+    /* PLACEHOLDER TRANSLATION */
+    document.querySelectorAll("[data-key-placeholder]").forEach(el=>{
+    const key = el.getAttribute("data-key-placeholder");
+    if(translations[lang][key]){
+    el.placeholder = translations[lang][key];
+    }
+    });
+
+    /* BUTTON ACTIVE SWITCH */
+    const buttons = document.querySelectorAll(".lang-btn");
+
+    buttons.forEach(btn=>{
+    btn.classList.remove("active");
+    });
+
+    /* If Urdu clicked */
+    if(lang === "ur"){
+    buttons[1].classList.add("active");
+    }
+    /* If English clicked */
+    else{
+    buttons[0].classList.add("active");
+    }
+
+    }
+
+</script>
+</body>
+</html>
+
+
+
