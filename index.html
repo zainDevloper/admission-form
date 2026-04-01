@@ -438,12 +438,12 @@ gap:10px;
             </div>
             <div class="field-group">
                 <label class="field-label" data-key="course">Course / Program</label>
-                <input type="text" placeholder="e.g. Web development" class="field-input" id="course">
+                <input type="text" placeholder="e.g. Computer Operator" class="field-input" id="course">
             </div>
-            <div class="field-group">
+            <!--<div class="field-group">
                 <label class="field-label" data-key="religion">Religion</label>
                 <input type="text" placeholder="Religion" class="field-input" id="religion">
-            </div>
+            </div>-->
             <div class="field-group">
                 <label class="field-label" data-key="signature">Signature</label>
                 <input type="text" placeholder="Full name / e-sign" class="field-input" id="signature">
@@ -530,7 +530,7 @@ gap:10px;
         const Islqual = document.getElementById('Islqual');
         const marks = document.getElementById('marks');
         const course = document.getElementById('course');
-        const religion = document.getElementById('religion');
+        //const religion = document.getElementById('religion');
         const signature = document.getElementById('signature');
         const cnicFile = document.getElementById('cnic_copy').files[0];
         const Priveious_deg = document.getElementById('Priveious_deg').files[0];
@@ -538,7 +538,7 @@ gap:10px;
 
         const allFields = [
             studentName, gender, fatherName, dob, cnic, addressField, 
-            contact, email, prevQual, Islqual, marks, course, religion, signature,
+            contact, email, prevQual, Islqual, marks, course, signature,
             document.getElementById('cnic_copy'),           // ✅ Direct DOM element
             document.getElementById('Priveious_deg'),       // ✅ Direct DOM element
             document.getElementById('Alumaislamiya_copy')   // ✅ Direct DOM element
@@ -595,7 +595,6 @@ gap:10px;
             const Islamic = Islqual.value.trim();
             const marksVal = marks.value.trim();
             const courseVal = course.value.trim();
-            const rel = religion.value.trim();
             const sig = signature.value.trim();
 
             // Files
@@ -696,10 +695,7 @@ gap:10px;
                 isValid = false;
             }
 
-            if (!rel) {
-                showFieldError(religion, '✗ Religion is required');
-                isValid = false;
-            }
+           
 
             if (!sig || sig.length < 2) {
                 showFieldError(signature, '✗ Signature must be at least 2 characters');
@@ -766,7 +762,7 @@ gap:10px;
             islamic_qualification: Islamic,
             mark: marksVal,
             course: courseVal,
-            religion: rel,
+           
             sign: sig,
             cnic_copy: cnicUrl,              // ✅ URL stored
             previous_degree: degreeUrl,        // ✅ URL stored
@@ -908,7 +904,6 @@ const translations = {
         islamic_qualification: "Islamic Qualification",
         marks: "Marks / Percentage",
         course: "Course / Program",
-        religion: "Religion",
         signature: "Signature",
         cnic_copy: "Cnic Copy",
         prev_copy: "Previous Copy",
@@ -929,53 +924,52 @@ const translations = {
         islamic_qualification: "اسلامی تعلیم",
         marks: "نمبر / فیصد",
         course: "کورس / پروگرام",
-        religion: "مذہب",
         signature: "دستخط",
         cnic_copy: "شناختی کارڈ کی کاپی",
         prev_copy: "پچھلی ڈگری کی کاپی",
-        al_copy: "الومہ اسلامیہ کی کاپی"
+        al_copy: "علومِ اسلامیہ کی کاپی"
 
     }
 
 };
 
-    function setLanguage(lang){
+function setLanguage(lang){
 
-    document.body.setAttribute("lang", lang);
+document.body.setAttribute("lang", lang);
 
-    /* TEXT TRANSLATION */
-    document.querySelectorAll("[data-key]").forEach(el=>{
-    const key = el.getAttribute("data-key");
-    if(translations[lang][key]){
-    el.innerText = translations[lang][key];
-    }
-    });
+/* TEXT TRANSLATION */
+document.querySelectorAll("[data-key]").forEach(el=>{
+const key = el.getAttribute("data-key");
+if(translations[lang][key]){
+el.innerText = translations[lang][key];
+}
+});
 
-    /* PLACEHOLDER TRANSLATION */
-    document.querySelectorAll("[data-key-placeholder]").forEach(el=>{
-    const key = el.getAttribute("data-key-placeholder");
-    if(translations[lang][key]){
-    el.placeholder = translations[lang][key];
-    }
-    });
+/* PLACEHOLDER TRANSLATION */
+document.querySelectorAll("[data-key-placeholder]").forEach(el=>{
+const key = el.getAttribute("data-key-placeholder");
+if(translations[lang][key]){
+el.placeholder = translations[lang][key];
+}
+});
 
-    /* BUTTON ACTIVE SWITCH */
-    const buttons = document.querySelectorAll(".lang-btn");
+/* BUTTON ACTIVE SWITCH */
+const buttons = document.querySelectorAll(".lang-btn");
 
-    buttons.forEach(btn=>{
-    btn.classList.remove("active");
-    });
+buttons.forEach(btn=>{
+btn.classList.remove("active");
+});
 
-    /* If Urdu clicked */
-    if(lang === "ur"){
-    buttons[1].classList.add("active");
-    }
-    /* If English clicked */
-    else{
-    buttons[0].classList.add("active");
-    }
+/* If Urdu clicked */
+if(lang === "ur"){
+buttons[1].classList.add("active");
+}
+/* If English clicked */
+else{
+buttons[0].classList.add("active");
+}
 
-    }
+}
 
 </script>
 </body>
