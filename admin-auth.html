@@ -21,7 +21,7 @@
             justify-content: center;
             padding: 1.5rem;
             position: relative;
-            overflow-y: auto;  /* YEH LINE ADD KARO - vertical scrolling enable */
+            overflow-y: auto;
             overflow-x: hidden;
         }
         /* Animated Circles Background */
@@ -526,7 +526,7 @@
                     <label>Email Address</label>
                     <div class="input-wrapper">
                         <span class="input-icon">📧</span>
-                        <input type="email" id="loginEmail" placeholder="Your Mail@darulfalah.com" value="darulfalah@darulfalah.com">
+                        <input type="email" id="loginEmail" placeholder="admin@darulfalah.com" >
                     </div>
                 </div>
                 
@@ -722,427 +722,499 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script>
-        // Initialize EmailJS
-        emailjs.init('Qggwp2tJDiwI8w-RH');
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+    // Initialize EmailJS
+    emailjs.init('Qggwp2tJDiwI8w-RH');
 
-        // ===== EMAILJS CONFIG =====
-        const EMAILJS_SERVICE_ID = 'service_14ksh0m';
-        const EMAILJS_TEMPLATE_ID = 'template_q3vsodp';
-        const USE_EMAILJS = true;
+    // ===== EMAILJS CONFIG =====
+    const EMAILJS_SERVICE_ID = 'service_14ksh0m';
+    const EMAILJS_TEMPLATE_ID = 'template_q3vsodp';
+    const USE_EMAILJS = false; // Set to false for testing without email
 
-        // Screen management
-        const screens = {
-            login: document.getElementById('screenLogin'),
-            signupEmail: document.getElementById('screenSignupEmail'),
-            signupOtp: document.getElementById('screenSignupOtp'),
-            signupPassword: document.getElementById('screenSignupPassword'),
-            forgotEmail: document.getElementById('screenForgotEmail'),
-            forgotOtp: document.getElementById('screenForgotOtp'),
-            forgotNewPassword: document.getElementById('screenForgotNewPassword')
-        };
+    // Screen management
+    const screens = {
+        login: document.getElementById('screenLogin'),
+        signupEmail: document.getElementById('screenSignupEmail'),
+        signupOtp: document.getElementById('screenSignupOtp'),
+        signupPassword: document.getElementById('screenSignupPassword'),
+        forgotEmail: document.getElementById('screenForgotEmail'),
+        forgotOtp: document.getElementById('screenForgotOtp'),
+        forgotNewPassword: document.getElementById('screenForgotNewPassword')
+    };
 
-        function showScreen(screenName) {
-            Object.values(screens).forEach(screen => screen.classList.remove('active'));
-            screens[screenName].classList.add('active');
-        }
+    function showScreen(screenName) {
+        Object.values(screens).forEach(screen => screen.classList.remove('active'));
+        screens[screenName].classList.add('active');
+    }
 
-        // Navigation
-        document.getElementById('goToSignupBtn').addEventListener('click', () => showScreen('signupEmail'));
-        document.getElementById('forgotPasswordBtn').addEventListener('click', () => showScreen('forgotEmail'));
-        
-        // Back buttons
-        document.getElementById('backFromSignupToLogin').addEventListener('click', () => showScreen('login'));
-        document.getElementById('backFromSignupOtp').addEventListener('click', () => showScreen('signupEmail'));
-        document.getElementById('backFromSignupPassword').addEventListener('click', () => showScreen('signupOtp'));
-        document.getElementById('backFromForgotToLogin').addEventListener('click', () => showScreen('login'));
-        document.getElementById('backFromForgotOtp').addEventListener('click', () => showScreen('forgotEmail'));
-        document.getElementById('backFromForgotPassword').addEventListener('click', () => showScreen('forgotOtp'));
+    // Navigation
+    document.getElementById('goToSignupBtn').addEventListener('click', () => showScreen('signupEmail'));
+    document.getElementById('forgotPasswordBtn').addEventListener('click', () => showScreen('forgotEmail'));
+    
+    // Back buttons
+    document.getElementById('backFromSignupToLogin').addEventListener('click', () => showScreen('login'));
+    document.getElementById('backFromSignupOtp').addEventListener('click', () => showScreen('signupEmail'));
+    document.getElementById('backFromSignupPassword').addEventListener('click', () => showScreen('signupOtp'));
+    document.getElementById('backFromForgotToLogin').addEventListener('click', () => showScreen('login'));
+    document.getElementById('backFromForgotOtp').addEventListener('click', () => showScreen('forgotEmail'));
+    document.getElementById('backFromForgotPassword').addEventListener('click', () => showScreen('forgotOtp'));
 
-        // OTP Input handling
-        function setupOtpInputs(inputs) {
-            inputs.forEach((id, index) => {
-                const input = document.getElementById(id);
-                if (!input) return;
-                
-                input.addEventListener('input', (e) => {
-                    if (e.target.value.length === 1) {
-                        if (index < inputs.length - 1) {
-                            document.getElementById(inputs[index + 1]).focus();
-                        }
-                    }
-                });
-                
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Backspace' && !input.value && index > 0) {
-                        document.getElementById(inputs[index - 1]).focus();
-                    }
-                });
-
-                input.addEventListener('keypress', (e) => {
-                    if (!/[0-9]/.test(e.key)) {
-                        e.preventDefault();
-                    }
-                });
-            });
-        }
-
-        const signupOtpInputs = ['otp1', 'otp2', 'otp3', 'otp4', 'otp5', 'otp6'];
-        const resetOtpInputs = ['resetOtp1', 'resetOtp2', 'resetOtp3', 'resetOtp4', 'resetOtp5', 'resetOtp6'];
-        
-        setupOtpInputs(signupOtpInputs);
-        setupOtpInputs(resetOtpInputs);
-
-        // Generate OTP
-        function generateOTP() {
-            return Math.floor(100000 + Math.random() * 900000).toString();
-        }
-
-        // Store OTPs
-        let currentOTP = null;
-        let currentEmail = null;
-        let otpTimer = null;
-
-        // Timer function
-        function startTimer(elementId, duration, onExpire) {
-            let timeLeft = duration;
-            const timerElement = document.getElementById(elementId);
+    // OTP Input handling
+    function setupOtpInputs(inputs) {
+        inputs.forEach((id, index) => {
+            const input = document.getElementById(id);
+            if (!input) return;
             
-            if (otpTimer) clearInterval(otpTimer);
-            
-            otpTimer = setInterval(() => {
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                timerElement.innerHTML = `Code expires in <span>${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}</span>`;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(otpTimer);
-                    currentOTP = null;
-                    if (onExpire) onExpire();
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                if (e.target.value.length === 1) {
+                    if (index < inputs.length - 1) {
+                        document.getElementById(inputs[index + 1]).focus();
+                    }
                 }
-                timeLeft--;
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && index > 0) {
+                    document.getElementById(inputs[index - 1]).focus();
+                }
+            });
+        });
+    }
+
+    const signupOtpInputs = ['otp1', 'otp2', 'otp3', 'otp4', 'otp5', 'otp6'];
+    const resetOtpInputs = ['resetOtp1', 'resetOtp2', 'resetOtp3', 'resetOtp4', 'resetOtp5', 'resetOtp6'];
+    
+    setupOtpInputs(signupOtpInputs);
+    setupOtpInputs(resetOtpInputs);
+
+    // Generate OTP
+    function generateOTP() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    // Store OTPs
+    let currentOTP = null;
+    let currentEmail = null;
+    let currentName = null;
+    let otpTimer = null;
+
+    // Timer function
+    function startTimer(elementId, duration, onExpire) {
+        let timeLeft = duration;
+        const timerElement = document.getElementById(elementId);
+        
+        if (otpTimer) clearInterval(otpTimer);
+        
+        otpTimer = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.innerHTML = `Code expires in <span>${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}</span>`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(otpTimer);
+                currentOTP = null;
+                timerElement.innerHTML = `Code expired <span>00:00</span>`;
+                if (onExpire) onExpire();
+            }
+            timeLeft--;
+        }, 1000);
+    }
+
+    // Send OTP
+    async function sendOTP(email, purpose, name = 'User') {
+        const otp = generateOTP();
+        currentOTP = otp;
+        currentEmail = email;
+        currentName = name;
+
+        console.log(`🔐 OTP for ${email}: ${otp} (Purpose: ${purpose})`);
+        
+        // Always show OTP in alert for testing
+        alert(`Your OTP is: ${otp}\n\nCheck console for details.`);
+        
+        if (USE_EMAILJS) {
+            try {
+                const templateParams = {
+                    to_email: email,
+                    to_name: name,
+                    otp_code: otp,
+                    purpose: purpose,
+                    expiry_time: '5 minutes',
+                    from_name: 'Darulfalah Admin',
+                    reply_to: email,
+                    current_year: new Date().getFullYear()
+                };
+
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+                return { success: true, otp };
+            } catch (error) {
+                console.error('EmailJS error:', error);
+                return { success: false, error: error.text || 'Email service error' };
+            }
+        }
+        
+        return { success: true, otp };
+    }
+
+    // Helper to show messages
+    function showMessage(elementId, text, type) {
+        const msg = document.getElementById(elementId);
+        if (!msg) return;
+        msg.textContent = text;
+        msg.className = `message ${type ? 'show ' + type : ''}`;
+    }
+
+    // Clear all messages
+    function clearAllMessages() {
+        const messages = ['loginMessage', 'signupMessage', 'signupOtpMessage', 'signupPasswordMessage', 
+                        'resetMessage', 'resetOtpMessage', 'resetNewPasswordMessage'];
+        messages.forEach(id => {
+            const msg = document.getElementById(id);
+            if (msg) {
+                msg.textContent = '';
+                msg.className = 'message';
+            }
+        });
+    }
+
+    // Create default admin if none exists (FIXED - only create if not exists)
+    function initializeDefaultAdmin() {
+        const existingUsers = localStorage.getItem('darulfalah_users');
+        
+        if (!existingUsers) {
+            const defaultUsers = [
+                {
+                    name: 'Admin User',
+                    email: 'darulfalahinternational@gmail.com',
+                    password: 'darulfalahinternational@123',
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            localStorage.setItem('darulfalah_users', JSON.stringify(defaultUsers));
+            console.log('✅ Default admin created:', defaultUsers[0]);
+        } else {
+            const users = JSON.parse(existingUsers);
+            console.log('✅ Existing users found:', users);
+        }
+    }
+    
+    // Initialize default admin (only once)
+    initializeDefaultAdmin();
+
+    // Login - FIXED with better debugging
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        console.log('Login attempt with:', { email, password });
+        
+        if (!email || !password) {
+            showMessage('loginMessage', 'Please enter email and password', 'error');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
+        console.log('All registered users:', users);
+        
+        // Case-insensitive email comparison for better UX
+        const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+
+        if (user) {
+            console.log('Login successful for:', user.email);
+            sessionStorage.setItem('adminUser', JSON.stringify(user));
+            showMessage('loginMessage', 'Login successful! Redirecting...', 'success');
+            setTimeout(() => {
+                window.location.href = 'admin-panel.html';
             }, 1000);
+        } else {
+            console.log('Login failed - User not found or password mismatch');
+            showMessage('loginMessage', 'Invalid email or password. Try: darulfalahinternational@gmail.com / darulfalahinternational@123', 'error');
+        }
+    });
+
+    // Signup - Send OTP
+    document.getElementById('sendSignupOtpBtn').addEventListener('click', async () => {
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+
+        if (!name || !email) {
+            showMessage('signupMessage', 'Please fill all fields', 'error');
+            return;
         }
 
-        // Send OTP via EmailJS
-        async function sendOTP(email, purpose, name = 'User') {
-            const otp = generateOTP();
-            currentOTP = otp;
-            currentEmail = email;
-
-            console.log(`📧 OTP for ${email}: ${otp} (Purpose: ${purpose})`);
-            
-            if (USE_EMAILJS && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID) {
-                try {
-                    const templateParams = {
-                        to_email: email,
-                        to_name: name,
-                        otp_code: otp,
-                        purpose: purpose,
-                        expiry_time: '5 minutes',
-                        from_name: 'Darulfalah Admin',
-                        reply_to: email,
-                        current_year: new Date().getFullYear()
-                    };
-
-                    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-                    return { success: true, otp };
-                } catch (error) {
-                    console.error('EmailJS error:', error);
-                    return { success: false, error: error.text };
-                }
-            }
-            
-            return { success: true, otp };
+        if (!email.includes('@') || !email.includes('.')) {
+            showMessage('signupMessage', 'Invalid email address', 'error');
+            return;
         }
 
-        // Signup - Send OTP
-        document.getElementById('sendSignupOtpBtn').addEventListener('click', async () => {
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
+        // Check if email already exists (case insensitive)
+        const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
+        if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+            showMessage('signupMessage', 'Email already registered', 'error');
+            return;
+        }
 
-            if (!name || !email) {
-                showMessage('signupMessage', 'Please fill all fields', 'error');
-                return;
-            }
+        showMessage('signupMessage', 'Sending verification code...', 'info');
+        
+        const result = await sendOTP(email, 'Account Verification', name);
+        
+        if (result.success) {
+            showMessage('signupMessage', `Code sent! Check alert/console`, 'success');
+            showScreen('signupOtp');
+            startTimer('signupTimer', 300, () => {
+                showMessage('signupOtpMessage', 'Code expired. Please request again.', 'error');
+            });
+        } else {
+            showMessage('signupMessage', 'Failed to send code. Using demo mode.', 'info');
+            showScreen('signupOtp');
+            startTimer('signupTimer', 300, () => {
+                showMessage('signupOtpMessage', 'Code expired. Please request again.', 'error');
+            });
+        }
+    });
 
-            if (!email.includes('@') || !email.includes('.')) {
-                showMessage('signupMessage', 'Invalid email address', 'error');
-                return;
-            }
+    // Verify Signup OTP
+    document.getElementById('verifySignupOtpBtn').addEventListener('click', () => {
+        const otp = signupOtpInputs.map(id => document.getElementById(id).value).join('');
+        
+        if (otp.length !== 6) {
+            showMessage('signupOtpMessage', 'Please enter complete 6-digit code', 'error');
+            return;
+        }
 
-            showMessage('signupMessage', 'Sending verification code...', 'info');
-            
-            const result = await sendOTP(email, 'Account Verification', name);
-            
-            if (result.success) {
-                showMessage('signupMessage', `Code sent to ${email}`, 'success');
-                showScreen('signupOtp');
-                startTimer('signupTimer', 300, () => {
-                    showMessage('signupOtpMessage', 'Code expired. Please request again.', 'error');
-                });
-            } else {
-                showMessage('signupMessage', 'Failed to send code', 'error');
-            }
+        if (otp !== currentOTP) {
+            showMessage('signupOtpMessage', 'Invalid verification code', 'error');
+            signupOtpInputs.forEach(id => document.getElementById(id).classList.add('error'));
+            return;
+        }
+
+        // Clear OTP inputs
+        signupOtpInputs.forEach(id => {
+            document.getElementById(id).value = '';
+            document.getElementById(id).classList.remove('error');
+        });
+        
+        showScreen('signupPassword');
+        showMessage('signupOtpMessage', '', '');
+    });
+
+    // Complete Signup
+    document.getElementById('completeSignupBtn').addEventListener('click', () => {
+        const password = document.getElementById('signupPassword').value;
+        const confirm = document.getElementById('signupConfirm').value;
+
+        if (!password || !confirm) {
+            showMessage('signupPasswordMessage', 'Please enter password', 'error');
+            return;
+        }
+
+        if (password.length < 6) {
+            showMessage('signupPasswordMessage', 'Password must be at least 6 characters', 'error');
+            return;
+        }
+
+        if (password !== confirm) {
+            showMessage('signupPasswordMessage', 'Passwords do not match', 'error');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
+        
+        if (users.some(u => u.email.toLowerCase() === currentEmail.toLowerCase())) {
+            showMessage('signupPasswordMessage', 'Email already registered', 'error');
+            return;
+        }
+
+        users.push({
+            name: currentName || document.getElementById('signupName').value,
+            email: currentEmail,
+            password: password,
+            createdAt: new Date().toISOString()
         });
 
-        // Verify Signup OTP
-        document.getElementById('verifySignupOtpBtn').addEventListener('click', () => {
-            const otp = signupOtpInputs.map(id => document.getElementById(id).value).join('');
-            
-            if (otp.length !== 6) {
-                showMessage('signupOtpMessage', 'Please enter complete 6-digit code', 'error');
-                return;
-            }
+        localStorage.setItem('darulfalah_users', JSON.stringify(users));
+        
+        showMessage('signupPasswordMessage', 'Account created! Redirecting to login...', 'success');
+        
+        // Clear all fields
+        document.getElementById('signupName').value = '';
+        document.getElementById('signupEmail').value = '';
+        document.getElementById('signupPassword').value = '';
+        document.getElementById('signupConfirm').value = '';
+        
+        setTimeout(() => {
+            showScreen('login');
+            clearAllMessages();
+        }, 2000);
+    });
 
-            if (otp !== currentOTP) {
-                showMessage('signupOtpMessage', 'Invalid verification code', 'error');
-                signupOtpInputs.forEach(id => document.getElementById(id).classList.add('error'));
-                return;
-            }
-
-            showScreen('signupPassword');
-            showMessage('signupOtpMessage', '', '');
-            signupOtpInputs.forEach(id => {
-                document.getElementById(id).value = '';
-                document.getElementById(id).classList.remove('error');
+    // Resend Signup OTP
+    document.getElementById('resendSignupOtpBtn').addEventListener('click', async () => {
+        const email = document.getElementById('signupEmail').value.trim();
+        const name = document.getElementById('signupName').value.trim();
+        
+        if (!email) {
+            showMessage('signupOtpMessage', 'Email not found. Please go back.', 'error');
+            return;
+        }
+        
+        showMessage('signupOtpMessage', 'Resending code...', 'info');
+        const result = await sendOTP(email, 'Account Verification', name);
+        
+        if (result.success) {
+            showMessage('signupOtpMessage', 'New code sent! Check alert/console', 'success');
+            startTimer('signupTimer', 300, () => {
+                showMessage('signupOtpMessage', 'Code expired. Request again.', 'error');
             });
+        }
+    });
+
+    // Forgot Password - Send Reset OTP
+    document.getElementById('sendResetOtpBtn').addEventListener('click', async () => {
+        const email = document.getElementById('resetEmail').value.trim();
+        
+        if (!email) {
+            showMessage('resetMessage', 'Please enter email', 'error');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
+        const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        
+        if (!user) {
+            showMessage('resetMessage', 'Email not found', 'error');
+            return;
+        }
+
+        showMessage('resetMessage', 'Sending reset code...', 'info');
+        
+        const result = await sendOTP(email, 'Password Reset', user.name);
+        
+        if (result.success) {
+            showMessage('resetMessage', `Reset code sent! Check alert/console`, 'success');
+            showScreen('forgotOtp');
+            startTimer('resetTimer', 300, () => {
+                showMessage('resetOtpMessage', 'Code expired. Request again.', 'error');
+            });
+        }
+    });
+
+    // Verify Reset OTP
+    document.getElementById('verifyResetOtpBtn').addEventListener('click', () => {
+        const otp = resetOtpInputs.map(id => document.getElementById(id).value).join('');
+        
+        if (otp.length !== 6) {
+            showMessage('resetOtpMessage', 'Please enter complete 6-digit code', 'error');
+            return;
+        }
+
+        if (otp !== currentOTP) {
+            showMessage('resetOtpMessage', 'Invalid reset code', 'error');
+            resetOtpInputs.forEach(id => document.getElementById(id).classList.add('error'));
+            return;
+        }
+
+        // Clear OTP inputs
+        resetOtpInputs.forEach(id => {
+            document.getElementById(id).value = '';
+            document.getElementById(id).classList.remove('error');
         });
 
-        // Complete Signup
-        document.getElementById('completeSignupBtn').addEventListener('click', () => {
-            const password = document.getElementById('signupPassword').value;
-            const confirm = document.getElementById('signupConfirm').value;
+        showScreen('forgotNewPassword');
+        showMessage('resetOtpMessage', '', '');
+    });
 
-            if (!password || !confirm) {
-                showMessage('signupPasswordMessage', 'Please enter password', 'error');
-                return;
-            }
+    // Complete Password Reset
+    document.getElementById('resetPasswordBtn').addEventListener('click', () => {
+        const newPass = document.getElementById('newPassword').value;
+        const confirmPass = document.getElementById('confirmPassword').value;
 
-            if (password.length < 6) {
-                showMessage('signupPasswordMessage', 'Password must be at least 6 characters', 'error');
-                return;
-            }
+        if (!newPass || !confirmPass) {
+            showMessage('resetNewPasswordMessage', 'Please fill all fields', 'error');
+            return;
+        }
 
-            if (password !== confirm) {
-                showMessage('signupPasswordMessage', 'Passwords do not match', 'error');
-                return;
-            }
+        if (newPass.length < 6) {
+            showMessage('resetNewPasswordMessage', 'Password must be at least 6 characters', 'error');
+            return;
+        }
 
-            const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
-            
-            if (users.some(u => u.email === currentEmail)) {
-                showMessage('signupPasswordMessage', 'Email already registered', 'error');
-                return;
-            }
+        if (newPass !== confirmPass) {
+            showMessage('resetNewPasswordMessage', 'Passwords do not match', 'error');
+            return;
+        }
 
-            users.push({
-                name: document.getElementById('signupName').value,
-                email: currentEmail,
-                password: password,
-                createdAt: new Date().toISOString()
-            });
-
+        const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
+        const userIndex = users.findIndex(u => u.email.toLowerCase() === currentEmail.toLowerCase());
+        
+        if (userIndex !== -1) {
+            users[userIndex].password = newPass;
             localStorage.setItem('darulfalah_users', JSON.stringify(users));
             
-            showMessage('signupPasswordMessage', 'Account created! Redirecting...', 'success');
+            showMessage('resetNewPasswordMessage', 'Password reset! Redirecting to login...', 'success');
+            
+            // Clear fields
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            document.getElementById('resetEmail').value = '';
             
             setTimeout(() => {
                 showScreen('login');
-                document.getElementById('signupName').value = '';
-                document.getElementById('signupEmail').value = '';
-                document.getElementById('signupPassword').value = '';
-                document.getElementById('signupConfirm').value = '';
+                clearAllMessages();
             }, 2000);
-        });
-
-        // Resend Signup OTP
-        document.getElementById('resendSignupOtpBtn').addEventListener('click', async () => {
-            const email = document.getElementById('signupEmail').value;
-            const name = document.getElementById('signupName').value;
-            
-            showMessage('signupOtpMessage', 'Resending code...', 'info');
-            const result = await sendOTP(email, 'Account Verification', name);
-            
-            if (result.success) {
-                showMessage('signupOtpMessage', 'New code sent!', 'success');
-                startTimer('signupTimer', 300, () => {});
-            }
-        });
-
-        // Login
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
-
-            if (user) {
-                sessionStorage.setItem('adminUser', JSON.stringify(user));
-                showMessage('loginMessage', 'Login successful! Redirecting...', 'success');
-                setTimeout(() => {
-                    window.location.href = 'admin-panel.html';
-                }, 1000);
-            } else {
-                showMessage('loginMessage', 'Invalid email or password', 'error');
-            }
-        });
-
-        // Forgot Password - Send Reset OTP
-        document.getElementById('sendResetOtpBtn').addEventListener('click', async () => {
-            const email = document.getElementById('resetEmail').value;
-            
-            if (!email) {
-                showMessage('resetMessage', 'Please enter email', 'error');
-                return;
-            }
-
-            const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
-            const user = users.find(u => u.email === email);
-            
-            if (!user) {
-                showMessage('resetMessage', 'Email not found', 'error');
-                return;
-            }
-
-            showMessage('resetMessage', 'Sending reset code...', 'info');
-            
-            const result = await sendOTP(email, 'Password Reset', user.name);
-            
-            if (result.success) {
-                showMessage('resetMessage', `Reset code sent to ${email}`, 'success');
-                showScreen('forgotOtp');
-                startTimer('resetTimer', 300, () => {
-                    showMessage('resetOtpMessage', 'Code expired. Request again.', 'error');
-                });
-            }
-        });
-
-        // Verify Reset OTP
-        document.getElementById('verifyResetOtpBtn').addEventListener('click', () => {
-            const otp = resetOtpInputs.map(id => document.getElementById(id).value).join('');
-            
-            if (otp.length !== 6) {
-                showMessage('resetOtpMessage', 'Please enter complete 6-digit code', 'error');
-                return;
-            }
-
-            if (otp !== currentOTP) {
-                showMessage('resetOtpMessage', 'Invalid reset code', 'error');
-                resetOtpInputs.forEach(id => document.getElementById(id).classList.add('error'));
-                return;
-            }
-
-            showScreen('forgotNewPassword');
-            showMessage('resetOtpMessage', '', '');
-            resetOtpInputs.forEach(id => {
-                document.getElementById(id).value = '';
-                document.getElementById(id).classList.remove('error');
-            });
-        });
-
-        // Complete Password Reset
-        document.getElementById('resetPasswordBtn').addEventListener('click', () => {
-            const newPass = document.getElementById('newPassword').value;
-            const confirmPass = document.getElementById('confirmPassword').value;
-
-            if (!newPass || !confirmPass) {
-                showMessage('resetNewPasswordMessage', 'Please fill all fields', 'error');
-                return;
-            }
-
-            if (newPass.length < 6) {
-                showMessage('resetNewPasswordMessage', 'Password must be at least 6 characters', 'error');
-                return;
-            }
-
-            if (newPass !== confirmPass) {
-                showMessage('resetNewPasswordMessage', 'Passwords do not match', 'error');
-                return;
-            }
-
-            const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
-            const userIndex = users.findIndex(u => u.email === currentEmail);
-            
-            if (userIndex !== -1) {
-                users[userIndex].password = newPass;
-                localStorage.setItem('darulfalah_users', JSON.stringify(users));
-                
-                showMessage('resetNewPasswordMessage', 'Password reset! Redirecting to login...', 'success');
-                
-                setTimeout(() => {
-                    showScreen('login');
-                    document.getElementById('resetEmail').value = '';
-                    document.getElementById('newPassword').value = '';
-                    document.getElementById('confirmPassword').value = '';
-                }, 2000);
-            }
-        });
-
-        // Resend Reset OTP
-        document.getElementById('resendResetOtpBtn').addEventListener('click', async () => {
-            const email = document.getElementById('resetEmail').value;
-            const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
-            const user = users.find(u => u.email === email);
-            
-            showMessage('resetOtpMessage', 'Resending code...', 'info');
-            const result = await sendOTP(email, 'Password Reset', user?.name || 'User');
-            
-            if (result.success) {
-                showMessage('resetOtpMessage', 'New code sent!', 'success');
-                startTimer('resetTimer', 300, () => {});
-            }
-        });
-
-        // Helper to show messages
-        function showMessage(elementId, text, type) {
-            const msg = document.getElementById(elementId);
-            if (!msg) return;
-            msg.textContent = text;
-            msg.className = `message ${type ? 'show ' + type : ''}`;
         }
+    });
 
-        // Create default admin if none exists
-        if (!localStorage.getItem('darulfalah_users')) {
-            localStorage.setItem('darulfalah_users', JSON.stringify([
-                {
-                    name: 'Admin User',
-                    email: 'darulfalah@darulfalah.com',
-                    password: 'Amin@121',
-                    createdAt: new Date().toISOString()
-                }
-            ]));
+    // Resend Reset OTP
+    document.getElementById('resendResetOtpBtn').addEventListener('click', async () => {
+        const email = document.getElementById('resetEmail').value.trim();
+        
+        if (!email) {
+            showMessage('resetOtpMessage', 'Email not found. Please go back.', 'error');
+            return;
         }
-
-        // Remove error class on input
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', () => {
-                input.classList.remove('error');
+        
+        const users = JSON.parse(localStorage.getItem('darulfalah_users') || '[]');
+        const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        
+        showMessage('resetOtpMessage', 'Resending code...', 'info');
+        const result = await sendOTP(email, 'Password Reset', user?.name || 'User');
+        
+        if (result.success) {
+            showMessage('resetOtpMessage', 'New code sent! Check alert/console', 'success');
+            startTimer('resetTimer', 300, () => {
+                showMessage('resetOtpMessage', 'Code expired. Request again.', 'error');
             });
-        });
+        }
+    });
 
-        // Enter key handling
-        document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                if (screens.login.classList.contains('active')) {
-                    document.getElementById('loginBtn').click();
-                } else if (screens.signupEmail.classList.contains('active')) {
-                    document.getElementById('sendSignupOtpBtn').click();
-                } else if (screens.signupOtp.classList.contains('active')) {
-                    document.getElementById('verifySignupOtpBtn').click();
-                } else if (screens.signupPassword.classList.contains('active')) {
-                    document.getElementById('completeSignupBtn').click();
-                } else if (screens.forgotEmail.classList.contains('active')) {
-                    document.getElementById('sendResetOtpBtn').click();
-                } else if (screens.forgotOtp.classList.contains('active')) {
-                    document.getElementById('verifyResetOtpBtn').click();
-                } else if (screens.forgotNewPassword.classList.contains('active')) {
-                    document.getElementById('resetPasswordBtn').click();
-                }
-            }
+    // Remove error class on input
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', () => {
+            input.classList.remove('error');
         });
-    </script>
-</body>
-</html>
+    });
+
+    // Enter key handling
+    document.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            if (screens.login.classList.contains('active')) {
+                document.getElementById('loginBtn').click();
+            } else if (screens.signupEmail.classList.contains('active')) {
+                document.getElementById('sendSignupOtpBtn').click();
+            } else if (screens.signupOtp.classList.contains('active')) {
+                document.getElementById('verifySignupOtpBtn').click();
+            } else if (screens.signupPassword.classList.contains('active')) {
+                document.getElementById('completeSignupBtn').click();
+            } else if (screens.forgotEmail.classList.contains('active')) {
+                document.getElementById('sendResetOtpBtn').click();
+            } else if (screens.forgotOtp.classList.contains('active')) {
+                document.getElementById('verifyResetOtpBtn').click();
+            } else if (screens.forgotNewPassword.classList.contains('active')) {
+                document.getElementById('resetPasswordBtn').click();
+            }
+        }
+    });
+</script>
